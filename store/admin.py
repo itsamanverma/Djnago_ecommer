@@ -8,4 +8,4 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['product_name','price','stock', 'category','modified_date','is_available']
 
 
-admin.site.register(Product)
+admin.site.register(Product,ProductAdmin)
