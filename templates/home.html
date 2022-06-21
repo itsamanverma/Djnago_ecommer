@@ -28,10 +28,10 @@
 	{% for product in products %}
 	<div class="col-md-3">
 		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="{% static 'images/items/1.jpg'%}"> </a>
+			<a href="./product-detail.html" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
 			<figcaption class="info-wrap">
 				<a href="./product-detail.html" class="title">{{ product.product_name }}</a>
-				<div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
+				<div class="price mt-1">${{ product.price }}</div> <!-- price-wrap.// -->
 			</figcaption>
 		</div>
 	</div> <!-- col.// -->
