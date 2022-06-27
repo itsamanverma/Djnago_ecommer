@@ -73,7 +73,6 @@ docs/_build/
 
 # PyBuilder
 target/
-
 media
 
 # Jupyter Notebook
