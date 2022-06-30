@@ -1,14 +1,13 @@
-Ecommer Django Example App
-This is an example Django app Ecommer websites.
 
-This example is written with Django 2.2.12 Unless you specifically need an old Django version you should check out a newer example.
+# Ecommer Django App
+## live-link :- #
 
-You can view a working version of this app here that uses MemCachier on Heroku. Running this app on your local machine in development will work as well, although then you won't be using MemCachier -- you'll be using a local dummy cache. MemCachier is currently only available with various cloud providers.
+This Ecommer Website 
+<b>coded by [Aman Verma](https://github.com/itsamanverma/Djnago_ecommer.git)</b>
+### 👍 HAVE FUN 👍
+Thanks, people
 
-Setting up MemCachier to work in Django is very easy. You need to make changes to requirements.txt, settings.py, and any app code that you want cached. These changes are covered in detail below.
-
-Deploy to Heroku
-You can deploy this app yourself to Heroku to play with.
+![Watch Now](./ecom.jpg)
 
 Deploy
 
