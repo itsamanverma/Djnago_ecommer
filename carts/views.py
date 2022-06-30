@@ -1,6 +1,6 @@
 
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from store.models import Product
 from carts.models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
@@ -21,8 +21,8 @@ def add_cart(request, product_id):
     product = Product.objects.get(id=product_id) # get the product by id from the database and add it to the cart
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart by cart_id from the seesion
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=_cart_id(request))
+    except Cart.DoesNotExist: # if the cart does not exist then create a new cart
+        cart = Cart.objects.create(cart_id=_cart_id(request)) # create a new cart if it does not exist
         cart.save()
         
     try:
@@ -33,6 +33,17 @@ def add_cart(request, product_id):
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
         cart_item.save() 
+    return redirect('cart') # return the cart.html template
+
+def remove_cart(request, product_id): # remove the product from the cart by id
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    product = get_object_or_404(Product, id=product_id) # get the product by id from the database if it exists otherwise return a 404 error
+    cart_item = CartItem.objects.get(product=product, cart=cart)
+    if cart_item.quantity > 1: # if the quantity is greater than one then subtract one from the quantity
+        cart_item.quantity -= 1 # subtract one from the quantity
+        cart_item.save()
+    else:
+        cart_item.delete()  # delete the cart item if the quantity is 1
     return redirect('cart') # return the cart.html template
 
 def cart(request,total=0,quantity=0,cart_items=None):
