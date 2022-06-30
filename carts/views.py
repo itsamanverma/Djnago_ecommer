@@ -41,9 +41,9 @@ def cart(request,total=0,quantity=0,cart_items=None):
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity) # add the price of the product to the total
-            quantity += cart_item.quantity                    # add the quantity of the product to the quantity
+            quantity += cart_item.quantity # add the quantity of the product to the quantity
     except ObjectDoesNotExist:
-        pass    # if the cart does not exist then pass
+        pass # if the cart does not exist then pass
 
     context = {
         'cart_items': cart_items,
