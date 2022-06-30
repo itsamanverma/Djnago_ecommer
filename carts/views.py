@@ -1,8 +1,10 @@
 
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from store.models import Product
 from carts.models import Cart, CartItem
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Create your views here.
 
@@ -30,10 +32,23 @@ def add_cart(request, product_id):
             cart_item.save() # save the cart item
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
-        cart_item.save()
-    return HttpResponse(cart_item.product) # return the product
-    exit() 
-    return render(request, 'cart') # return the cart.html template
+        cart_item.save() 
+    return redirect('cart') # return the cart.html template
 
-def cart(request):
-    return render(request, 'store/cart.html')
+def cart(request,total=0,quantity=0,cart_items=None):
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        for cart_item in cart_items:
+            total += (cart_item.product.price * cart_item.quantity) # add the price of the product to the total
+            quantity += cart_item.quantity                    # add the quantity of the product to the quantity
+    except ObjectDoesNotExist:
+        pass    # if the cart does not exist then pass
+
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+        'quantity': quantity
+    }
+
+    return render(request, 'store/cart.html', context)
