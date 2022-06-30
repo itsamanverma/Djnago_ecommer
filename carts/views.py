@@ -42,13 +42,17 @@ def cart(request,total=0,quantity=0,cart_items=None):
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity) # add the price of the product to the total
             quantity += cart_item.quantity # add the quantity of the product to the quantity
+        tax = round(total * 0.10) # add 10% tax to the total
+        grand_total = total + tax # add the tax to the total
     except ObjectDoesNotExist:
         pass # if the cart does not exist then pass
 
     context = {
         'cart_items': cart_items,
         'total': total,
-        'quantity': quantity
+        'quantity': quantity,
+        'tax': tax,
+        'grand_total': grand_total
     }
 
     return render(request, 'store/cart.html', context)
