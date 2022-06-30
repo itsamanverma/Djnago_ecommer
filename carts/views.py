@@ -46,10 +46,17 @@ def remove_cart(request, product_id): # remove the product from the cart by id
         cart_item.delete()  # delete the cart item if the quantity is 1
     return redirect('cart') # return the cart.html template
 
-def cart(request,total=0,quantity=0,cart_items=None):
+def remove_item_cart(request, product_id): # remove the product from the cart by id
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    product = get_object_or_404(Product, id=product_id) # get the product by id from the database if it exists otherwise return a 404 error
+    cart_item = CartItem.objects.get(product=product, cart=cart) # get the cart item by product and cart if it exists otherwise return a 404 error
+    cart_item.delete() # delete the cart item
+    return redirect('cart') # return the cart.html template
+
+def cart(request,total=0,quantity=0,cart_items=None): # render the cart.html template
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True) # get all the cart items by cart id and is_active is true
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity) # add the price of the product to the total
             quantity += cart_item.quantity # add the quantity of the product to the quantity
