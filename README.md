@@ -3,7 +3,7 @@
 ## live-link :- #
 
 This Ecommer Website 
-<b>coded by [Aman Verma](https://github.com/itsamanverma/Djnago_ecommer.git)</b>
+<b>coded by [Aman Verma](https://github.com/itsamanverma)</b>
 ### 👍 HAVE FUN 👍
 Thanks, people
 
