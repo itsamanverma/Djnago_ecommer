@@ -55,6 +55,8 @@ def remove_item_cart(request, product_id): # remove the product from the cart by
 
 def cart(request,total=0,quantity=0,cart_items=None): # render the cart.html template
     try:
+        tax = 0
+        grand_total = 0 
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = CartItem.objects.filter(cart=cart, is_active=True) # get all the cart items by cart id and is_active is true
         for cart_item in cart_items:
