@@ -41,4 +41,4 @@ def product_detail(request, category_slug=None, product_slug=None):
         'single_product': single_product, # get the product by slug from the database
         'in_cart': in_cart  # return the in_cart variable as a json object 
     }
-    return render(request, 'store/product_detail.html',context)
+    return render(request, 'store/product_detail.html', context)
