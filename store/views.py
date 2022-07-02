@@ -1,7 +1,8 @@
 from builtins import Exception
-from ast import Try
+from ast import Or, Try, keyword
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Q
 
 from carts.models import CartItem
 from .models import Product
@@ -49,3 +50,18 @@ def product_detail(request, category_slug=None, product_slug=None):
         'in_cart': in_cart  # return the in_cart variable as a json object 
     }
     return render(request, 'store/product_detail.html', context)
+
+def search(request):        # search the product by the name or the description
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword'] 
+        if keyword:
+            products = Product.objects.order_by('-created_date').filter(Q(product_name__icontains=keyword) | Q(description__icontains=keyword))
+            paginator = Paginator(products, 6) # Show 6 products per page
+            page = request.GET.get('page')
+            paged_products = paginator.get_page(page)
+        
+            context = {
+                'products': paged_products,
+                'keyword': keyword
+            }
+    return render(request, 'store/store.html',context) # render the store.html page
