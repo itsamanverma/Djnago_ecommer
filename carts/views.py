@@ -20,18 +20,18 @@ def _cart_id(request):
 def add_cart(request, product_id): # add the product to the cart by id
 
     product = Product.objects.get(id=product_id) # get the product by id from the database and add it to the cart
-    if request.method == 'POST':
+    product_variation = []
+    if request.method == 'POST': # if the request is a post then get the product variation by id
         for item in request.POST:
            key = item
            value = request.POST[key]
            
-        try:
-                variation = Variation.objects.get(product = product, variation_category__iexact=key, variation_value__iexact=value)
-                print(variation)    
-        except:                 
-                pass
+           try: # try to get the product variation by id
+                variation = Variation.objects.get(product=product, variation_category__iexact=key, variation_value__iexact=value) # get the product variation by product and variation category and variation value if it exists otherwise return a 404 error
+                product_variation.append(variation) # add the product variation to the product variation list
+           except:
+                pass # if the product variation does not exist then pass
 
-    
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart by cart_id from the seesion
     except Cart.DoesNotExist: # if the cart does not exist then create a new cart
@@ -41,10 +41,16 @@ def add_cart(request, product_id): # add the product to the cart by id
     try:
         cart_item = CartItem.objects.get(product=product, cart=cart) # get the cart item by product and cart
         if cart_item.quantity < cart_item.product.stock: # if the quantity is less than the stock then add one to the quantity  
-            cart_item.quantity += 1 # add one to the quantity if the product is in the cart
-            cart_item.save() # save the cart item
+            if len(product_variation) > 0: # if the product variation is greater than 0 then add the product variation to the cart item
+                for item in product_variation: # for each product variation in the product_variation
+                    cart_item.variations.add(item) # add the product variation to the cart item
+                cart_item.quantity += 1 # add one to the quantity if the product is in the cart
+                cart_item.save() # save the cart item
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
+        if len(product_variation) > 0: # if the product variation is greater than 0 then add the product variation to the cart item
+                for item in product_variation:
+                    cart_item.variations.add(item)
         cart_item.save() 
     return redirect('cart') # return the cart.html template
 
