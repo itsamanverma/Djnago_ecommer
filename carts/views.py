@@ -85,12 +85,12 @@ def add_cart(request, product_id): # add the product to the cart by id
     return redirect('cart') # return the cart.html template
 
 def remove_cart(request, product_id): # remove the product from the cart by id
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart by cart_id from the seesion
     product = get_object_or_404(Product, id=product_id) # get the product by id from the database if it exists otherwise return a 404 error
     cart_item = CartItem.objects.get(product=product, cart=cart)
     if cart_item.quantity > 1: # if the quantity is greater than one then subtract one from the quantity
         cart_item.quantity -= 1 # subtract one from the quantity
-        cart_item.save()
+        cart_item.save() # save the cart item
     else:
         cart_item.delete()  # delete the cart item if the quantity is 1
     return redirect('cart') # return the cart.html template
