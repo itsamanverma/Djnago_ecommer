@@ -98,11 +98,14 @@ def remove_cart(request, product_id, cart_item_id): # remove the product from th
         pass
     return redirect('cart') # return the cart.html template
 
-def remove_item_cart(request, product_id): # remove the product from the cart by id
+def remove_item_cart(request, product_id, cart_item_id): # remove the product from the cart by id
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id) # get the product by id from the database if it exists otherwise return a 404 error
-    cart_item = CartItem.objects.get(product=product, cart=cart) # get the cart item by product and cart if it exists otherwise return a 404 error
-    cart_item.delete() # delete the cart item
+    try:
+        cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id) # get the cart item by product and cart if it exists otherwise return a 404 error
+        cart_item.delete() # delete the cart item
+    except:
+        pass
     return redirect('cart') # return the cart.html template
 
 def cart(request,total=0,quantity=0,cart_items=None): # render the cart.html template
